@@ -504,9 +504,4 @@ plt.scatter(root9_x, root9_y, c="hotpink", marker=".", s=0.4)
 plt.xlabel("x")
 plt.ylabel("y")
 
-
-# In[ ]:
-
-
-
-
+plt.show()
