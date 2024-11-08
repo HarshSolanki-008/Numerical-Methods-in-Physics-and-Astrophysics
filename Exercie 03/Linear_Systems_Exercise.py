@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-m = [[1,2],[5,6],[8,9]]
+m = [[1,2,3],[4,5,6],[7,8,9]]
 n = [[10],[11],[12]]
 def mat_mul(m, n):
     if len(m[0]) != len(n): return print("Dimensions do not match for Matrix Multiplication")
