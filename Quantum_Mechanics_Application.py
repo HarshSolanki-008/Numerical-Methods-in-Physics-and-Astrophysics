@@ -1,4 +1,5 @@
 import numpy as np
+import matplotlib.pyplot as plt
 
 def array_fill(fn,a,b,n):
     x = np.linspace(a,b,n)
@@ -29,13 +30,6 @@ solution, error = Newton_Cootes_2nd_Order(x,y,a,b,n)
 print("Solution is: ", solution)
 print("Error is: ", error)
 
-# def psi(x,t,L,omega1,omega2):
-#    if 0 < x < L:
-#        psi = (1/np.sqrt(L))*(np.sin(np.pi*x/L)*np.exp(-1j*omega1*t) + np.sin(2*np.pi*x/L)*np.exp(-1j*omega2*t))
-#    else:
-#        psi = 0
-#    P = np.abs(psi)**2  
-#    return P
 
 def psi(x,t,L,omega1,omega2):
     psi = (1/np.sqrt(L))*(np.sin(np.pi*x/L)*np.exp(-1j*omega1*t) + np.sin(2*np.pi*x/L)*np.exp(-1j*omega2*t))
@@ -48,11 +42,42 @@ del_omega = omega2 - omega1
 
 a = 3*L/4
 b = L
-n = 255
+n = np.arange(5,503,2)
 time = [0,np.pi/del_omega]
 
-for t in time:
-    x,y = array_fill(lambda x: psi(x,t,L,omega1,omega2),a,b,n)
-    solution1,error1 = Newton_Cootes_2nd_Order(x,y,a,b,n)
-    print(f"Solution for t = {t} is: {solution1}")
-    print(f"Error here is: {error1}")
+solutions_t1 = []
+errors_t1 = []
+h_t1 = []
+
+solutions_t2 = []
+errors_t2 = []
+h_t2 = []
+
+for i in range(len(n)):
+    x,y = array_fill(lambda x: psi(x,time[0],L,omega1,omega2),a,b,n[i])
+    solution1,error1 = Newton_Cootes_2nd_Order(x,y,a,b,n[i])
+    solutions_t1.append(solution1)
+    errors_t1.append(error1)
+    h_t1.append(L/(n[i] - 1))
+
+for i in range(len(n)):
+    x,y = array_fill(lambda x: psi(x,time[1],L,omega1,omega2),a,b,n[i])
+    solution1,error1 = Newton_Cootes_2nd_Order(x,y,a,b,n[i])
+    solutions_t2.append(solution1)
+    errors_t2.append(error1)
+    h_t2.append(L/(n[i] - 1))
+
+plt.figure("log(E) vs log(h)")
+plt.subplot(1,2,1)
+plt.plot(np.log(errors_t1),np.log(h_t1), label = f"for time = {time[0]}", color = "red")
+plt.xlabel("log(h)")
+plt.ylabel("log(E)")
+plt.legend()
+
+plt.subplot(1,2,2)
+plt.plot(np.log(errors_t2),np.log(h_t2), label = f"for time = {time[1]}", color = "black")
+plt.xlabel("log(h)")
+plt.ylabel("log(E)")
+plt.legend()
+
+plt.show()
